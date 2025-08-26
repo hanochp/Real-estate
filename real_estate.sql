@@ -1,5 +1,8 @@
 -- T-SQL script to set up real estate database, seed sample data, and provide requested reports
 
+USE master;
+GO
+
 IF DB_ID('RealEstate') IS NOT NULL
     DROP DATABASE RealEstate;
 GO
