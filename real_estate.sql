@@ -9,25 +9,32 @@ USE RealEstate;
 GO
 
 CREATE TABLE dbo.House (
-    HouseID INT IDENTITY(1,1) PRIMARY KEY,
+    HouseID INT IDENTITY(1,1) CONSTRAINT PK_House PRIMARY KEY,
     Address NVARCHAR(200) NOT NULL,
     Town NVARCHAR(50) NOT NULL
-        CHECK (Town IN ('Lakewood','Jackson','Toms River','Howell','Brick','Manchester')),
+        CONSTRAINT CK_House_Town CHECK (Town IN ('Lakewood','Jackson','Toms River','Howell','Brick','Manchester')),
     HouseType NVARCHAR(20) NOT NULL
-        CHECK (HouseType IN ('bi-level','colonial','ranch','split-level','duplex','townhouse','vacant land','apartment')),
-    Bedrooms TINYINT NOT NULL CHECK (Bedrooms >= 0),
-    Bathrooms DECIMAL(3,1) NOT NULL CHECK (Bathrooms >= 0),
-    HouseSqFt INT NOT NULL CHECK (HouseSqFt > 0),
-    LotSqFt DECIMAL(10,1) NOT NULL CHECK (LotSqFt > 0),
+        CONSTRAINT CK_House_HouseType CHECK (HouseType IN ('bi-level','colonial','ranch','split-level','duplex','townhouse','vacant land','apartment')),
+    Bedrooms TINYINT NOT NULL
+        CONSTRAINT CK_House_Bedrooms_NonNegative CHECK (Bedrooms >= 0),
+    Bathrooms DECIMAL(3,1) NOT NULL
+        CONSTRAINT CK_House_Bathrooms_NonNegative CHECK (Bathrooms >= 0),
+    HouseSqFt INT NOT NULL
+        CONSTRAINT CK_House_HouseSqFt_Positive CHECK (HouseSqFt > 0),
+    LotSqFt DECIMAL(10,1) NOT NULL
+        CONSTRAINT CK_House_LotSqFt_Positive CHECK (LotSqFt > 0),
     Owner NVARCHAR(100) NOT NULL,
     ClientContact NVARCHAR(100) NOT NULL,
     Realtor NVARCHAR(100) NOT NULL,
     DateOnMarket DATE NOT NULL,
     DateSold DATE NULL,
-    AskingPrice MONEY NOT NULL CHECK (AskingPrice BETWEEN 100000 AND 9900000),
-    SoldPrice MONEY NULL CHECK (SoldPrice BETWEEN 100000 AND 9900000),
+    AskingPrice MONEY NOT NULL
+        CONSTRAINT CK_House_AskingPrice_Range CHECK (AskingPrice BETWEEN 100000 AND 9900000),
+    SoldPrice MONEY NULL
+        CONSTRAINT CK_House_SoldPrice_Range CHECK (SoldPrice BETWEEN 100000 AND 9900000),
     Buyer NVARCHAR(100) NULL,
-    IsInContract BIT NOT NULL DEFAULT 0,
+    IsInContract BIT NOT NULL
+        CONSTRAINT DF_House_IsInContract DEFAULT 0,
     CONSTRAINT CK_House_SoldPrice_GE_Asking CHECK (SoldPrice IS NULL OR SoldPrice >= AskingPrice),
     CONSTRAINT CK_House_DateSold CHECK (DateSold IS NULL OR DateSold >= DateOnMarket),
     CONSTRAINT CK_House_SaleState CHECK (
