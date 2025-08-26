@@ -8,6 +8,10 @@ GO
 USE RealEstate;
 GO
 
+IF OBJECT_ID('dbo.House', 'U') IS NOT NULL
+    DROP TABLE dbo.House;
+GO
+
 CREATE TABLE dbo.House (
     HouseID INT IDENTITY(1,1) CONSTRAINT PK_House PRIMARY KEY,
     Address NVARCHAR(200) NOT NULL,
