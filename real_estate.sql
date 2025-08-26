@@ -11,6 +11,7 @@ END;
 GO
 CREATE DATABASE RealEstate;
 GO
+
 USE RealEstate;
 GO
 
